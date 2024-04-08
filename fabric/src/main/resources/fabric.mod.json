@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "crucible",
+  "version": "${version}",
+
+  "name": "Crucible",
+  "description": "",
+  "authors": [],
+  "contact": {},
+
+  "license": "All Rights Reserved",
+  "icon": "icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.foundry.crucible.fabric.CrucibleFabric"
+    ]
+  },
+  "mixins": [
+    "crucible.mixins.json",
+    "crucible-common.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.9",
+    "minecraft": ">=1.20.1"
+  }
+}

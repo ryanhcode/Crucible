@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.foundry.crucible.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "LevelMixin",
+    "WatcherThreadMixin"
+  ],
+  "client": [
+    "client.FogRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
