@@ -5,7 +5,16 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "LevelMixin",
-    "WatcherThreadMixin"
+    "WatcherThreadMixin",
+    "worldgen.Ap2DensityFunction",
+    "worldgen.ConstantDensityFunctionMixin",
+    "worldgen.DensityFunctionMixin",
+    "worldgen.MappedDensityFunctionMixin",
+    "worldgen.MulOrAddDensityFunctionMixin",
+    "worldgen.NoiseBasedChunkGeneratorMixin",
+    "worldgen.NoiseChunkMixin",
+    "worldgen.PureTransformerMixin",
+    "worldgen.TwoArgumentSimpleDensityFunctionMixin"
   ],
   "client": [
     "client.FogRendererMixin"
