@@ -6,6 +6,10 @@
   "mixins": [
     "LevelMixin",
     "WatcherThreadMixin",
+    "chunk.ChunkMapMixin",
+    "chunk.ChunkTrackerMixin",
+    "chunk.DistanceManagerMixin",
+    "chunk.ServerChunkCacheMixin",
     "worldgen.Ap2DensityFunctionMixin",
     "worldgen.ClampDensityFunctionMixin",
     "worldgen.DensityFunctionMixin",

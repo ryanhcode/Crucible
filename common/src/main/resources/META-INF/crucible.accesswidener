@@ -23,3 +23,6 @@ accessible class net/minecraft/world/level/levelgen/DensityFunctions$TwoArgument
 accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator updateForX (D)V
 accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator updateForY (D)V
 accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator updateForZ (D)V
+
+# Server Chunks
+accessible class net/minecraft/server/level/ServerChunkCache$MainThreadExecutor
