@@ -6,18 +6,12 @@
   "mixins": [
     "LevelMixin",
     "WatcherThreadMixin",
-    "worldgen.Ap2DensityFunctionMixin",
-    "worldgen.ClampDensityFunctionMixin",
     "worldgen.DensityFunctionMixin",
+    "worldgen.HolderHolderDensityFunctionMixin",
     "worldgen.MappedDensityFunctionMixin",
-    "worldgen.MaterialRuleListMixin",
     "worldgen.MulOrAddDensityFunctionMixin",
     "worldgen.NoiseBasedChunkGeneratorMixin",
-    "worldgen.NoiseChunkMixin",
-    "worldgen.RandomStateMixin",
-    "worldgen.wrapper.BlendDensityMixin",
-    "worldgen.wrapper.CacheAllInCellMixin",
-    "worldgen.wrapper.WeirdScaledSamplerMixin"
+    "worldgen.NoiseChunkMixin"
   ],
   "client": [
     "client.FogRendererMixin"

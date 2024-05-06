@@ -10,6 +10,7 @@ public class CrucibleFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         Crucible.init();
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> CrucibleWorldGenHook.init(server.registryAccess()));
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> CrucibleWorldGenHook.clear());
     }
 }

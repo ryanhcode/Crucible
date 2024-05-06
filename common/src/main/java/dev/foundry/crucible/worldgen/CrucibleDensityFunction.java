@@ -1,12 +1,11 @@
 package dev.foundry.crucible.worldgen;
 
 import net.minecraft.world.level.levelgen.DensityFunction;
-import org.objectweb.asm.Label;
+import net.minecraft.world.level.levelgen.DensityFunctions;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-
-import java.util.function.Consumer;
+import org.objectweb.asm.tree.MethodNode;
 
 /**
  * This allows a density function to be reduced to bytecode.
@@ -17,19 +16,11 @@ public interface CrucibleDensityFunction {
      * Writes the transformation bytecode into the specified method.
      * The stack is expected to have a double value after this method exits.
      *
+     * @param classNode The class to write into
      * @param method      The method to write into
      * @param environment The compilation environment
      */
-    void writeBytecode(ClassNode classNode, MethodVisitor method, CrucibleDensityEnvironment.Builder environment);
-
-    void writeArrayBytecode(ClassNode classNode, MethodVisitor method, CrucibleDensityEnvironment.Builder environment);
-
-    /**
-     * @return Whether this class is considered the same as all other classes with the same fields
-     */
-    default boolean canCache() {
-        return true;
-    }
+    void writeBytecode(ClassNode classNode, MethodNode method, CrucibleDensityEnvironment.Builder environment);
 
     /**
      * Retrieves the constant value of this node if applicable
@@ -48,52 +39,38 @@ public interface CrucibleDensityFunction {
         return false;
     }
 
-    static void writeEvaluate(ClassNode classNode, MethodVisitor method, CrucibleDensityEnvironment.Builder environment, DensityFunction function) {
+    static boolean isConstant(DensityFunction function) {
+        return function instanceof CrucibleDensityFunction func && func.isConstant() || function instanceof DensityFunctions.BlendAlpha || function instanceof DensityFunctions.BlendOffset || function instanceof DensityFunctions.Constant;
+    }
+
+    static double getConstant(DensityFunction function) {
+        if (function instanceof CrucibleDensityFunction func) {
+            return func.getConstantValue();
+        }
+        if (function instanceof DensityFunctions.BlendAlpha) {
+            return 1.0;
+        }
+        if (function instanceof DensityFunctions.BlendOffset) {
+            return 0.0;
+        }
+        return ((DensityFunctions.Constant) function).value();
+    }
+
+    static void writeEvaluate(ClassNode classNode, MethodNode method, CrucibleDensityEnvironment.Builder environment, DensityFunction function) {
+        function = CrucibleDensityFunctionCompiler.unwrap(function);
+        if (isConstant(function)) {
+            environment.loadConstant(method, getConstant(function));
+            return;
+        }
+
         if (function instanceof CrucibleDensityFunction crucibleDensityFunction) {
             crucibleDensityFunction.writeBytecode(classNode, method, environment);
         } else {
-            environment.writeGetFunction(classNode, method, function);
-            method.visitVarInsn(Opcodes.ALOAD, 1);
-            method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "dev/foundry/crucible/extension/DensityFunctionDuck", "crucible$computeDensity", "(L" + CrucibleDensityFunctionCompiler.getReferenceName(DensityFunction.FunctionContext.class) + ";)D", true);
+            environment.loadDensityFunction(method, function);
+            // clamp
+            // yclamp gradient
+            // range choice
         }
-    }
-
-    static void writeEvaluateArray(ClassNode classNode, MethodVisitor method, CrucibleDensityEnvironment.Builder environment, DensityFunction function) {
-        if (function instanceof CrucibleDensityFunction crucibleDensityFunction) {
-            crucibleDensityFunction.writeArrayBytecode(classNode, method, environment);
-        } else {
-            environment.writeGetFunction(classNode, method, function);
-            method.visitVarInsn(Opcodes.ALOAD, 1);
-            method.visitVarInsn(Opcodes.ALOAD, 2);
-            method.visitMethodInsn(Opcodes.INVOKEINTERFACE, "dev/foundry/crucible/extension/DensityFunctionDuck", "crucible$computeDensity", "([DL" + CrucibleDensityFunctionCompiler.getReferenceName(DensityFunction.ContextProvider.class) + ";)V", true);
-        }
-    }
-
-    static void writePureTransformerArray(ClassNode classNode, MethodVisitor method, CrucibleDensityEnvironment.Builder environment, DensityFunction input, Runnable function) {
-        CrucibleDensityFunction.writeEvaluateArray(classNode, method, environment, input);
-
-        Label top = new Label();
-        Label end = new Label();
-        method.visitInsn(Opcodes.ICONST_0);
-        method.visitVarInsn(Opcodes.ISTORE, 3);
-
-        method.visitLabel(top);
-        method.visitVarInsn(Opcodes.ILOAD, 3);
-        method.visitVarInsn(Opcodes.ALOAD, 1);
-        method.visitInsn(Opcodes.ARRAYLENGTH);
-        method.visitJumpInsn(Opcodes.IF_ICMPGE, end);
-        method.visitVarInsn(Opcodes.ALOAD, 1);
-        method.visitVarInsn(Opcodes.ILOAD, 3);
-        method.visitVarInsn(Opcodes.ALOAD, 0);
-        method.visitVarInsn(Opcodes.ALOAD, 1);
-        method.visitVarInsn(Opcodes.ILOAD, 3);
-        method.visitInsn(Opcodes.DALOAD);
-        function.run();
-        method.visitInsn(Opcodes.DASTORE);
-        method.visitIincInsn(3, 1);
-        method.visitJumpInsn(Opcodes.GOTO, top);
-        method.visitLabel(end);
-        method.visitInsn(Opcodes.RETURN);
     }
 
     static void writeInt(MethodVisitor method, int value) {

@@ -12,13 +12,7 @@ accessible class net/minecraft/world/level/levelgen/DensityFunctions$Constant
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$MulOrAdd$Type
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$Ap2
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$BlendAlpha
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$BlendDensity
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$BlendOffset
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Clamp
 accessible class net/minecraft/world/level/levelgen/DensityFunctions$PureTransformer
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$Noise
-accessible class net/minecraft/world/level/levelgen/DensityFunctions$TwoArgumentSimpleFunction
 
 accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator updateForX (D)V
 accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolator updateForY (D)V

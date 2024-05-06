@@ -41,12 +41,13 @@ public class NoiseChunkMixin implements NoiseChunkDuck {
      * @author Ocelot
      * @reason Remove ArrayList#forEach
      */
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @Overwrite
     public void updateForZ(int z, double noise) {
         this.inCellZ = z - this.cellStartBlockZ;
         this.interpolationCounter++;
-        for (NoiseChunk.NoiseInterpolator interpolator : this.interpolators) {
-            interpolator.updateForZ(noise);
+        for (int i = 0; i < this.interpolators.size(); i++) {
+            this.interpolators.get(i).updateForZ(noise);
         }
     }
 
@@ -54,11 +55,12 @@ public class NoiseChunkMixin implements NoiseChunkDuck {
      * @author Ocelot
      * @reason Remove ArrayList#forEach
      */
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @Overwrite
     public void updateForY(int y, double noise) {
         this.inCellY = y - this.cellStartBlockY;
-        for (NoiseChunk.NoiseInterpolator interpolator : this.interpolators) {
-            interpolator.updateForY(noise);
+        for (int i = 0; i < this.interpolators.size(); i++) {
+            this.interpolators.get(i).updateForY(noise);
         }
     }
 
@@ -66,21 +68,24 @@ public class NoiseChunkMixin implements NoiseChunkDuck {
      * @author Ocelot
      * @reason Remove ArrayList#forEach
      */
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @Overwrite
     public void updateForX(int x, double noise) {
         this.inCellX = x - this.cellStartBlockX;
-        for (NoiseChunk.NoiseInterpolator interpolator : this.interpolators) {
-            interpolator.updateForX(noise);
+        for (int i = 0; i < this.interpolators.size(); i++) {
+            this.interpolators.get(i).updateForX(noise);
         }
     }
 
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @Override
     public void crucible$updateNoise(int x, int y, int z, double noise) {
         this.inCellY = y - this.cellStartBlockY;
         this.inCellX = x - this.cellStartBlockX;
         this.inCellZ = z - this.cellStartBlockZ;
         this.interpolationCounter++;
-        for (NoiseChunk.NoiseInterpolator interpolator : this.interpolators) {
+        for (int i = 0; i < this.interpolators.size(); i++) {
+            NoiseChunk.NoiseInterpolator interpolator = this.interpolators.get(i);
             interpolator.updateForY(noise);
             interpolator.updateForX(noise);
             interpolator.updateForZ(noise);

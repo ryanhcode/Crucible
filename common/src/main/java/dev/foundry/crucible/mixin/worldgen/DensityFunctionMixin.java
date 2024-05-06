@@ -5,6 +5,8 @@ import net.minecraft.world.level.levelgen.DensityFunction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Arrays;
+
 @Mixin(DensityFunction.class)
 public interface DensityFunctionMixin extends DensityFunctionDuck {
 
@@ -20,7 +22,9 @@ public interface DensityFunctionMixin extends DensityFunctionDuck {
     }
 
     @Override
-    default void crucible$computeDensity(double[] fill, DensityFunction.ContextProvider context) {
+    default double[] crucible$computeDensity(int length, DensityFunction.ContextProvider context) {
+        double[] fill = new double[length];
         this.fillArray(fill, context);
+        return fill;
     }
 }

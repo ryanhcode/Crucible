@@ -4,8 +4,11 @@ import net.fabricmc.loader.api.FabricLoader;
 
 public class CruciblePlatformImpl {
 
-    public static String mapMethod(String owner, String name, String descriptor) {
-        System.out.println(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace());
-        return FabricLoader.getInstance().getMappingResolver().mapMethodName("test", owner, name, descriptor);
+    public static String mapMethod(Class<?> owner, String obfuscatedName, String name, String descriptor) {
+        return FabricLoader.getInstance().getMappingResolver().mapMethodName("named", owner.getTypeName(), name, descriptor);
+    }
+
+    public static String mapField(Class<?> owner, String obfuscatedName, String name, String descriptor) {
+        return FabricLoader.getInstance().getMappingResolver().mapFieldName("named", owner.getTypeName(), name, descriptor);
     }
 }

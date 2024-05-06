@@ -1,9 +1,11 @@
 package dev.foundry.crucible.worldgen;
 
 import dev.foundry.crucible.Crucible;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.NoiseRouter;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public class CrucibleWorldGenHook {
 
     private static CrucibleDensityFunctionCompiler compiler;
@@ -15,29 +17,17 @@ public class CrucibleWorldGenHook {
         compiler = null;
     }
 
-    public static DensityFunction simplify(DensityFunction function) {
+    public static void init(RegistryAccess registryAccess) {
         if (compiler == null) {
-            compiler = new CrucibleDensityFunctionCompiler(Crucible.class.getClassLoader(), true);
+            compiler = new CrucibleDensityFunctionCompiler(Crucible.class.getClassLoader(), registryAccess, true);
+            Crucible.LOGGER.info("Initialized density function compiler");
+        } else {
+            Crucible.LOGGER.warn("Attempted to re-initialize density function compiler");
         }
-        return compiler.compile(function);
     }
 
-    public static NoiseRouter simplify(NoiseRouter router) {
-        return new NoiseRouter(
-                simplify(router.barrierNoise()),
-                simplify(router.fluidLevelFloodednessNoise()),
-                simplify(router.fluidLevelSpreadNoise()),
-                simplify(router.lavaNoise()),
-                simplify(router.temperature()),
-                simplify(router.vegetation()),
-                simplify(router.continents()),
-                simplify(router.erosion()),
-                simplify(router.depth()),
-                simplify(router.ridges()),
-                simplify(router.initialDensityWithoutJaggedness()),
-                simplify(router.finalDensity()),
-                simplify(router.veinToggle()),
-                simplify(router.veinRidged()),
-                simplify(router.veinGap()));
+    public static DensityFunction simplify(DensityFunction function) {
+//        return compiler != null ? compiler.compile(function) : function;
+        return function;
     }
 }
