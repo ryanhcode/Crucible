@@ -9,6 +9,5 @@ public class Crucible {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void init() {
-
     }
 }

@@ -26,3 +26,6 @@ accessible method net/minecraft/world/level/levelgen/NoiseChunk$NoiseInterpolato
 
 # Server Chunks
 accessible class net/minecraft/server/level/ServerChunkCache$MainThreadExecutor
+
+# Memory Optimization
+accessible method com/mojang/blaze3d/vertex/PoseStack$Pose <init> (Lorg/joml/Matrix4f;Lorg/joml/Matrix3f;)V

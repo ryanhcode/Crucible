@@ -5,11 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "LevelMixin",
+    "Vec3Mixin",
     "WatcherThreadMixin",
+    "chunk.ChunkAccessMixin",
     "chunk.ChunkMapMixin",
     "chunk.ChunkTrackerMixin",
     "chunk.DistanceManagerMixin",
     "chunk.ServerChunkCacheMixin",
+    "client.pose.LevelRendererMixin",
+    "entity.EntityMixin",
+    "vec3.EntityMixin",
+    "vec3.FlowingFluidMixin",
     "worldgen.Ap2DensityFunctionMixin",
     "worldgen.ClampDensityFunctionMixin",
     "worldgen.DensityFunctionMixin",
@@ -18,13 +24,24 @@
     "worldgen.MulOrAddDensityFunctionMixin",
     "worldgen.NoiseBasedChunkGeneratorMixin",
     "worldgen.NoiseChunkMixin",
+    "worldgen.PlacedFeatureMixin",
     "worldgen.RandomStateMixin",
     "worldgen.wrapper.BlendDensityMixin",
     "worldgen.wrapper.CacheAllInCellMixin",
     "worldgen.wrapper.WeirdScaledSamplerMixin"
   ],
   "client": [
-    "client.FogRendererMixin"
+    "client.ClientLevelMixin",
+    "client.fog.EndEffectsMixin",
+    "client.fog.FogRendererMixin",
+    "client.fog.OverworldEffectsMixin",
+    "client.pose.ChunkRenderDispatcherCompileMixin",
+    "client.pose.GameRendererMixin",
+    "client.pose.ItemPickupParticleMixin",
+    "client.pose.LoomScreenMixin",
+    "client.pose.MinecraftMixin",
+    "client.pose.MobAppearanceParticleMixin",
+    "client.pose.PoseStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -24,10 +24,10 @@ public class CrucibleChunkCache {
         this.cache.trimToSize();
     }
 
-    public synchronized @Nullable ChunkAccess get(long pos, ChunkStatus status) {
+    public synchronized @Nullable Element get(long pos, ChunkStatus status) {
         for (Element element : this.cache) {
             if (element.pos == pos && element.status == status) {
-                return element.access;
+                return element;
             }
         }
         return null;

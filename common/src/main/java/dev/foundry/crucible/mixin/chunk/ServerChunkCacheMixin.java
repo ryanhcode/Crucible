@@ -6,7 +6,6 @@ import net.minecraft.Util;
 import net.minecraft.server.level.ChunkHolder;
 import net.minecraft.server.level.ChunkLevel;
 import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -21,10 +20,6 @@ import java.util.concurrent.CompletableFuture;
 
 @Mixin(ServerChunkCache.class)
 public abstract class ServerChunkCacheMixin {
-
-    @Shadow
-    @Final
-    public ServerLevel level;
 
     @Shadow
     protected abstract CompletableFuture<Either<ChunkAccess, ChunkHolder.ChunkLoadingFailure>> getChunkFutureMainThread(int k, int l, ChunkStatus arg, boolean bl);
@@ -58,11 +53,11 @@ public abstract class ServerChunkCacheMixin {
      * @author Ocelot
      */
     @Overwrite
-    public ChunkAccess getChunk(int x, int z, ChunkStatus chunkStatus, boolean now) {
+    public @Nullable ChunkAccess getChunk(int x, int z, ChunkStatus chunkStatus, boolean now) {
         long pos = ChunkPos.asLong(x, z);
-        ChunkAccess access = this.crucible$cache.get(pos, chunkStatus);
-        if (access != null) {
-            return access;
+        CrucibleChunkCache.Element element = this.crucible$cache.get(pos, chunkStatus);
+        if (element != null) {
+            return element.access();
         }
 
         CompletableFuture<ChunkAccess> future = this.getChunkFutureMainThread(x, z, chunkStatus, now).thenApply(either -> either.map(value -> {
@@ -74,7 +69,10 @@ public abstract class ServerChunkCacheMixin {
             } else {
                 return null;
             }
-        }));
+        })).thenApply(value -> {
+            this.crucible$cache.storeInCache(pos, value, chunkStatus);
+            return value;
+        });
 
         // On the main thread make sure the chunk is loaded
         if (Thread.currentThread() == this.mainThread) {
@@ -92,9 +90,9 @@ public abstract class ServerChunkCacheMixin {
     @Overwrite
     public LevelChunk getChunkNow(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
-        ChunkAccess access = this.crucible$cache.get(pos, ChunkStatus.FULL);
-        if (access != null) {
-            return access instanceof LevelChunk chunk ? chunk : null;
+        CrucibleChunkCache.Element element = this.crucible$cache.get(pos, ChunkStatus.FULL);
+        if (element != null) {
+            return element.access() instanceof LevelChunk chunk ? chunk : null;
         }
 
         ChunkHolder chunkHolder = this.getVisibleChunkIfPresent(pos);
