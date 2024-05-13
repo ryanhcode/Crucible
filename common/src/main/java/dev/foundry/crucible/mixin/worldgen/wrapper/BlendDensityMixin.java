@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(targets = "net.minecraft.world.level.levelgen.DensityFunctions.BlendDensity")
 public class BlendDensityMixin {
 
-    @ModifyVariable(method = "<init>", at = @At("HEAD"), index = 2, argsOnly = true)
+    @ModifyVariable(method = "<init>", at = @At("HEAD"), index = 1, argsOnly = true)
     private static DensityFunction init(DensityFunction value) {
         return CrucibleWorldGenHook.simplify(value);
     }
