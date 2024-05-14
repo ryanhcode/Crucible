@@ -32,6 +32,7 @@
   ],
   "client": [
     "client.ClientLevelMixin",
+    "client.FrustumMixin",
     "client.fog.EndEffectsMixin",
     "client.fog.FogRendererMixin",
     "client.fog.OverworldEffectsMixin",

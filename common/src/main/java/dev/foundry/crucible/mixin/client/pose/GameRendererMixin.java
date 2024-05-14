@@ -7,41 +7,35 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
     @Unique
-    private final GuiGraphics crucible$guiGraphics = new GuiGraphics(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
+    private GuiGraphics crucible$guiGraphics;
 
     @Unique
-    private final Matrix4f crucible$projection = new Matrix4f();
+    private final PoseStack crucible$renderStack = new PoseStack();
+    @Unique
+    private final PoseStack crucible$projectionStack = new PoseStack();
 
     @Redirect(method = "renderZoomed", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
     public PoseStack renderZoomedStack() {
-        return GlobalPoseStack.get();
+        return ((PoseStackDuck) this.crucible$renderStack).reset();
     }
 
     @Redirect(method = "getProjectionMatrix", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
     public PoseStack getProjectionMatrixStack() {
-        return GlobalPoseStack.get();
-    }
-
-    @Inject(method = "getProjectionMatrix", at = @At("RETURN"), cancellable = true)
-    public void getProjectionMatrix(double d, CallbackInfoReturnable<Matrix4f> cir) {
-        cir.setReturnValue(this.crucible$projection.set(cir.getReturnValue()));
+        return ((PoseStackDuck) this.crucible$projectionStack).reset();
     }
 
     @Redirect(method = "render", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
     public PoseStack renderStack() {
-        return GlobalPoseStack.get();
+        return ((PoseStackDuck) this.crucible$renderStack).reset();
     }
 
     @Redirect(method = "renderLevel", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
@@ -55,8 +49,12 @@ public class GameRendererMixin {
     }
 
     @Redirect(method = "render", at = @At(value = "NEW", target = "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)Lnet/minecraft/client/gui/GuiGraphics;"))
-    public GuiGraphics create(Minecraft arg, MultiBufferSource.BufferSource arg2) {
-        ((PoseStackDuck) this.crucible$guiGraphics.pose()).reset();
+    public GuiGraphics create(Minecraft minecraft, MultiBufferSource.BufferSource buffer) {
+        if (this.crucible$guiGraphics == null) {
+            this.crucible$guiGraphics = new GuiGraphics(minecraft, buffer);
+        } else {
+            ((PoseStackDuck) this.crucible$guiGraphics.pose()).reset();
+        }
         return this.crucible$guiGraphics;
     }
 }

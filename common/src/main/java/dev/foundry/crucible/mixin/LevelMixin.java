@@ -82,7 +82,7 @@ public abstract class LevelMixin implements LevelReader {
 
     @Override
     public int getMaxSection() {
-        return (this.crucible$cachedMinY + this.crucible$cachedHeight - 1) >> SectionPos.SECTION_BITS + 1;
+        return ((this.crucible$cachedMinY + this.crucible$cachedHeight - 1) >> SectionPos.SECTION_BITS) + 1;
     }
 
     @Override
