@@ -54,14 +54,13 @@ public abstract class ServerChunkCacheMixin {
      */
     @Overwrite
     public @Nullable ChunkAccess getChunk(int x, int z, ChunkStatus chunkStatus, boolean now) {
-        long pos = ChunkPos.asLong(x, z);
-        CrucibleChunkCache.Element element = this.crucible$cache.get(pos, chunkStatus);
+        CrucibleChunkCache.Element element = this.crucible$cache.get(x, z, chunkStatus);
         if (element != null) {
             return element.access();
         }
 
         CompletableFuture<ChunkAccess> future = this.getChunkFutureMainThread(x, z, chunkStatus, now).thenApply(either -> either.map(value -> {
-            this.crucible$cache.storeInCache(pos, value, chunkStatus);
+            this.crucible$cache.storeInCache(x, z, value, chunkStatus);
             return value;
         }, failure -> {
             if (now) {
@@ -70,7 +69,7 @@ public abstract class ServerChunkCacheMixin {
                 return null;
             }
         })).thenApply(value -> {
-            this.crucible$cache.storeInCache(pos, value, chunkStatus);
+            this.crucible$cache.storeInCache(x, z, value, chunkStatus);
             return value;
         });
 
@@ -89,12 +88,12 @@ public abstract class ServerChunkCacheMixin {
      */
     @Overwrite
     public LevelChunk getChunkNow(int x, int z) {
-        long pos = ChunkPos.asLong(x, z);
-        CrucibleChunkCache.Element element = this.crucible$cache.get(pos, ChunkStatus.FULL);
+        CrucibleChunkCache.Element element = this.crucible$cache.get(x, z, ChunkStatus.FULL);
         if (element != null) {
             return element.access() instanceof LevelChunk chunk ? chunk : null;
         }
 
+        long pos = ChunkPos.asLong(x, z);
         ChunkHolder chunkHolder = this.getVisibleChunkIfPresent(pos);
         if (chunkHolder == null) {
             return null;

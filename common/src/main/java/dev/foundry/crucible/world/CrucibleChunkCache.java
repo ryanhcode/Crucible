@@ -4,29 +4,26 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 public class CrucibleChunkCache {
 
-    private final ArrayList<Element> cache;
+    private final Element[] cache;
     private final int maxSize;
 
     public CrucibleChunkCache(int size) {
-        this.cache = new ArrayList<>(size + 1);
+        this.cache = new Element[size];
         this.maxSize = size;
     }
 
-    public synchronized void storeInCache(long pos, ChunkAccess access, ChunkStatus status) {
-        this.cache.add(new Element(pos, access, status));
-        while (this.cache.size() > this.maxSize) {
-            this.cache.remove(0);
-        }
-        this.cache.trimToSize();
+    public synchronized void storeInCache(int x, int z, ChunkAccess access, ChunkStatus status) {
+        System.arraycopy(this.cache, 0, this.cache, 1, this.maxSize - 1);
+        this.cache[0] = new Element(x, z, access, status);
     }
 
-    public synchronized @Nullable Element get(long pos, ChunkStatus status) {
+    public synchronized @Nullable Element get(int x, int z, ChunkStatus status) {
         for (Element element : this.cache) {
-            if (element.pos == pos && element.status == status) {
+            if (element == null || (element.x == x && element.z == z && element.status == status)) {
                 return element;
             }
         }
@@ -34,9 +31,9 @@ public class CrucibleChunkCache {
     }
 
     public synchronized void clear() {
-        this.cache.clear();
+        Arrays.fill(this.cache, null);
     }
 
-    public record Element(long pos, ChunkAccess access, ChunkStatus status) {
+    public record Element(int x, int z, ChunkAccess access, ChunkStatus status) {
     }
 }

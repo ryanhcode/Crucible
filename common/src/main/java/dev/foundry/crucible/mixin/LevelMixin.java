@@ -97,8 +97,13 @@ public abstract class LevelMixin implements LevelReader {
     }
 
     @Override
+    public int getSectionsCount() {
+        return ((this.crucible$cachedHeight - 1) >> SectionPos.SECTION_BITS) + 1;
+    }
+
+    @Override
     public int getSectionIndex(int y) {
-        return this.getSectionIndexFromSectionY(y >> SectionPos.SECTION_BITS);
+        return (y - this.crucible$cachedMinY) >> SectionPos.SECTION_BITS;
     }
 
     @Override
