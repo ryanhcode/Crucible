@@ -16,19 +16,10 @@
     "entity.EntityMixin",
     "vec3.EntityMixin",
     "vec3.FlowingFluidMixin",
-    "worldgen.Ap2DensityFunctionMixin",
-    "worldgen.ClampDensityFunctionMixin",
-    "worldgen.DensityFunctionMixin",
-    "worldgen.MappedDensityFunctionMixin",
     "worldgen.MaterialRuleListMixin",
-    "worldgen.MulOrAddDensityFunctionMixin",
     "worldgen.NoiseBasedChunkGeneratorMixin",
     "worldgen.NoiseChunkMixin",
-    "worldgen.PlacedFeatureMixin",
-    "worldgen.RandomStateMixin",
-    "worldgen.wrapper.BlendDensityMixin",
-    "worldgen.wrapper.CacheAllInCellMixin",
-    "worldgen.wrapper.WeirdScaledSamplerMixin"
+    "worldgen.PlacedFeatureMixin"
   ],
   "client": [
     "client.ClientLevelMixin",
