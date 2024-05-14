@@ -1,5 +1,6 @@
 package dev.foundry.crucible.mixin.entity;
 
+import dev.foundry.crucible.entity.PassengerIterator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.world.entity.Entity;
@@ -48,5 +49,14 @@ public abstract class EntityMixin {
             shapes.add(shape);
         }
         return collideWithShapes(delta, boundingBox, shapes);
+    }
+
+    /**
+     * @author Ocelot
+     * @reason Remove streams
+     */
+    @Overwrite
+    public Iterable<Entity> getIndirectPassengers() {
+        return () -> new PassengerIterator((Entity) (Object) this);
     }
 }

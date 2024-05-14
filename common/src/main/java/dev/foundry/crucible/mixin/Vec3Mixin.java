@@ -26,25 +26,25 @@ public class Vec3Mixin implements Vec3Duck {
     public double z;
 
     @Override
-    public Vec3 setX(double x) {
+    public Vec3 crucible$setX(double x) {
         this.x = x;
         return (Vec3) (Object) this;
     }
 
     @Override
-    public Vec3 setY(double y) {
+    public Vec3 crucible$setY(double y) {
         this.y = y;
         return (Vec3) (Object) this;
     }
 
     @Override
-    public Vec3 setZ(double z) {
+    public Vec3 crucible$setZ(double z) {
         this.z = z;
         return (Vec3) (Object) this;
     }
 
     @Override
-    public Vec3 set(double x, double y, double z) {
+    public Vec3 crucible$set(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;

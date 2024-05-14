@@ -12,6 +12,6 @@ public class EndEffectsMixin {
 
     @Redirect(method = "getBrightnessDependentFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"))
     public Vec3 scale(Vec3 instance, double scale) {
-        return ((Vec3Duck) instance).set(instance.x * scale, instance.y * scale, instance.z * scale);
+        return ((Vec3Duck) instance).crucible$set(instance.x * scale, instance.y * scale, instance.z * scale);
     }
 }

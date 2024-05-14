@@ -1,4 +1,4 @@
-package dev.foundry.crucible.mixin.client.pose;
+package dev.foundry.crucible.mixin.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

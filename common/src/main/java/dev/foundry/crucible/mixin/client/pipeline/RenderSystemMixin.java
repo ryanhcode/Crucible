@@ -1,4 +1,4 @@
-package dev.foundry.crucible.mixin.client.blaze3d;
+package dev.foundry.crucible.mixin.client.pipeline;
 
 import com.mojang.blaze3d.pipeline.RenderCall;
 import com.mojang.blaze3d.platform.GLX;

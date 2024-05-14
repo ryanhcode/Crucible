@@ -41,8 +41,12 @@ public class PlacedFeatureMixin {
         ConfiguredFeature<?, ?> configuredFeature = this.feature.value();
         boolean placed = false;
         for (BlockPos pos : positions) {
-            if (configuredFeature.place(arg.getLevel(), arg.generator(), arg2, pos)) {
-                placed = true;
+            // Vanilla ignores any errors thrown, so we have to as well
+            try {
+                if (configuredFeature.place(arg.getLevel(), arg.generator(), arg2, pos)) {
+                    placed = true;
+                }
+            } catch (Throwable ignored) {
             }
         }
         return placed;

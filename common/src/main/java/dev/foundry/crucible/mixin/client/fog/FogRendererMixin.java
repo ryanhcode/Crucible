@@ -78,15 +78,15 @@ public class FogRendererMixin {
             double r = (double) (color >> 16 & 0xFF) / 255.0;
             double g = (double) (color >> 8 & 0xFF) / 255.0;
             double b = (double) (color & 0xFF) / 255.0;
-            Vec3 fogColor = crucible$captureLevel.effects().getBrightnessDependentFogColor(((Vec3Duck) crucible$tempColor).set(r, g, b), time);
+            Vec3 fogColor = crucible$captureLevel.effects().getBrightnessDependentFogColor(((Vec3Duck) crucible$tempColor).crucible$set(r, g, b), time);
             store.set(fogColor.x, fogColor.y, fogColor.z);
         });
-        return ((Vec3Duck) crucible$tempColor).set(crucible$tempVec);
+        return ((Vec3Duck) crucible$tempColor).crucible$set(crucible$tempVec);
     }
 
     @Redirect(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getSkyColor(Lnet/minecraft/world/phys/Vec3;F)Lnet/minecraft/world/phys/Vec3;"))
     private static Vec3 getSkyColor(ClientLevel instance, Vec3 pos, float partialTicks) {
         ((ClientLevelDuck) instance).getSkyColor(pos, partialTicks, crucible$tempVec);
-        return ((Vec3Duck) crucible$tempColor).set(crucible$tempVec);
+        return ((Vec3Duck) crucible$tempColor).crucible$set(crucible$tempVec);
     }
 }

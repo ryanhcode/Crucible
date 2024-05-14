@@ -12,6 +12,6 @@ public class OverworldEffectsMixin {
 
     @Redirect(method = "getBrightnessDependentFogColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"))
     public Vec3 multiply(Vec3 instance, double scaleX, double scaleY, double scaleZ) {
-        return ((Vec3Duck) instance).set(instance.x * scaleX, instance.y * scaleY, instance.z * scaleZ);
+        return ((Vec3Duck) instance).crucible$set(instance.x * scaleX, instance.y * scaleY, instance.z * scaleZ);
     }
 }

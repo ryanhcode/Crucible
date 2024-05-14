@@ -9,6 +9,7 @@ public class JomlPoseStack extends PoseStack implements PoseStackDuck {
 
     private final Matrix4fStack stack = new Matrix4fStack(128);
     private final Matrix3fStack normal = new Matrix3fStack(128);
+    private final Pose last = new Pose(this.stack, this.normal);
     private int layer;
 
     @Override
@@ -68,7 +69,7 @@ public class JomlPoseStack extends PoseStack implements PoseStackDuck {
 
     @Override
     public Pose last() {
-        return new Pose(new Matrix4f(this.stack), new Matrix3f(this.normal));
+        return this.last;
     }
 
     @Override
