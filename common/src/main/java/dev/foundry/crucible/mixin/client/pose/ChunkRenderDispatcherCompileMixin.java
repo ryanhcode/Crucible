@@ -11,6 +11,6 @@ public class ChunkRenderDispatcherCompileMixin {
 
     @Redirect(method = "compile", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
     public PoseStack poseStack() {
-        return GlobalPoseStack.get();
+        return GlobalPoseStack.getJoml();
     }
 }

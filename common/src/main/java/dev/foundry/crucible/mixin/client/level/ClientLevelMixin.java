@@ -1,4 +1,4 @@
-package dev.foundry.crucible.mixin.client;
+package dev.foundry.crucible.mixin.client.level;
 
 import dev.foundry.crucible.extension.ClientLevelDuck;
 import dev.foundry.crucible.fog.JomlCubicSampler;

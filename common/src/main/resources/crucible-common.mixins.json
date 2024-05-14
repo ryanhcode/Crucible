@@ -7,11 +7,15 @@
     "LevelMixin",
     "Vec3Mixin",
     "WatcherThreadMixin",
+    "chunk.BiomeManagerMixin",
+    "chunk.BlockCollisionsMixin",
     "chunk.ChunkAccessMixin",
     "chunk.ChunkMapMixin",
     "chunk.ChunkTrackerMixin",
     "chunk.DistanceManagerMixin",
     "chunk.ServerChunkCacheMixin",
+    "chunk.SimpleBitStorageMixin",
+    "client.level.BlockMixin",
     "client.pose.LevelRendererMixin",
     "entity.EntityMixin",
     "vec3.EntityMixin",
@@ -22,11 +26,13 @@
     "worldgen.PlacedFeatureMixin"
   ],
   "client": [
-    "client.ClientLevelMixin",
     "client.FrustumMixin",
+    "client.blaze3d.GLStateManagerMixin",
+    "client.blaze3d.RenderSystemMixin",
     "client.fog.EndEffectsMixin",
     "client.fog.FogRendererMixin",
     "client.fog.OverworldEffectsMixin",
+    "client.level.ClientLevelMixin",
     "client.pose.ChunkRenderDispatcherCompileMixin",
     "client.pose.GameRendererMixin",
     "client.pose.ItemPickupParticleMixin",
@@ -34,6 +40,7 @@
     "client.pose.LoomScreenMixin",
     "client.pose.MinecraftMixin",
     "client.pose.MobAppearanceParticleMixin",
+    "client.pose.ModelBlockRendererMixin",
     "client.pose.PoseStackMixin"
   ],
   "injectors": {

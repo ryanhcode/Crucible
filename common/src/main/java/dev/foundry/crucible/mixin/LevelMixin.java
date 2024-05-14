@@ -6,11 +6,17 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements LevelReader {
+public abstract class LevelMixin implements LevelAccessor {
 
     @Shadow
     public abstract DimensionType dimensionType();
@@ -61,6 +67,38 @@ public abstract class LevelMixin implements LevelReader {
     }
 
     @Override
+    public ChunkAccess getChunk(BlockPos blockPos) {
+        return this.getChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4, ChunkStatus.FULL, true);
+    }
+
+    /**
+     * @author Ocelot
+     * @reason Reduce caller overhead
+     */
+    @Overwrite
+    public LevelChunk getChunkAt(BlockPos blockPos) {
+        return (LevelChunk) this.getChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4, ChunkStatus.FULL, true);
+    }
+
+    /**
+     * @author Ocelot
+     * @reason Reduce caller overhead
+     */
+    @Overwrite
+    public LevelChunk getChunk(int x, int z) {
+        return (LevelChunk) this.getChunk(x, z, ChunkStatus.FULL, true);
+    }
+
+    /**
+     * @author Ocelot
+     * @reason Reduce caller overhead
+     */
+    @Overwrite
+    public @Nullable BlockGetter getChunkForCollisions(int x, int z) {
+        return this.getChunkSource().getChunk(x, z, ChunkStatus.FULL, false);
+    }
+
+    @Override
     public int getMinBuildHeight() {
         return this.crucible$cachedMinY;
     }
@@ -85,9 +123,11 @@ public abstract class LevelMixin implements LevelReader {
         return ((this.crucible$cachedMinY + this.crucible$cachedHeight - 1) >> SectionPos.SECTION_BITS) + 1;
     }
 
+    // This seems like a copy, but this is called millions of times and the small overhead of copying parameters adds up
     @Override
     public boolean isOutsideBuildHeight(BlockPos blockPos) {
-        return this.isOutsideBuildHeight(blockPos.getY());
+        int y = blockPos.getY() - this.crucible$cachedMinY;
+        return y < 0 || y >= this.crucible$cachedHeight;
     }
 
     @Override
