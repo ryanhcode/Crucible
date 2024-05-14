@@ -1,5 +1,6 @@
 package dev.foundry.crucible.mixin;
 
+import dev.foundry.crucible.extension.LevelDuck;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -27,11 +28,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements LevelAccessor {
+public abstract class LevelMixin implements LevelAccessor, LevelDuck {
 
     @Shadow
     public abstract DimensionType dimensionType();
 
+    @Shadow
+    protected int randValue;
     @Unique
     private int crucible$cachedMinY;
 
@@ -175,5 +178,12 @@ public abstract class LevelMixin implements LevelAccessor {
     @Redirect(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/dimension/DimensionType;hasCeiling()Z"))
     public boolean hasCeiling(DimensionType instance) {
         return this.crucible$cachedHasCeiling;
+    }
+
+    @Override
+    public BlockPos.MutableBlockPos crucible$getBlockRandomPos(int x, int y, int z, int l, BlockPos.MutableBlockPos set) {
+        this.randValue = this.randValue * 3 + 1013904223;
+        int m = this.randValue >> 2;
+        return set.set(x + (m & 15), y + (m >> 16 & l), z + (m >> 8 & 15));
     }
 }

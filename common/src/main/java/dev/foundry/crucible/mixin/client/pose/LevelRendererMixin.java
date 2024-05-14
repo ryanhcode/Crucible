@@ -38,14 +38,14 @@ public class LevelRendererMixin {
     @Unique
     private ThreadLocal<Vec3> crucible$temp2;
     @Unique
-    private ThreadLocal<BlockPos.MutableBlockPos> crucible$renderContaining;
+    private ThreadLocal<BlockPos.MutableBlockPos> crucible$renderTemp;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
         this.crucible$renderChunkPos = ThreadLocal.withInitial(() -> new Vec3(0, 0, 0));
         this.crucible$temp = ThreadLocal.withInitial(() -> new Vec3(0, 0, 0));
         this.crucible$temp2 = ThreadLocal.withInitial(() -> new Vec3(0, 0, 0));
-        this.crucible$renderContaining = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
+        this.crucible$renderTemp = ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
     }
 
     @Redirect(method = "renderLineBox(Lcom/mojang/blaze3d/vertex/VertexConsumer;DDDDDDFFFF)V", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
@@ -101,6 +101,11 @@ public class LevelRendererMixin {
 
     @Redirect(method = "updateRenderChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/BlockPos;containing(DDD)Lnet/minecraft/core/BlockPos;"))
     public BlockPos containing(double x, double y, double z) {
-        return this.crucible$renderContaining.get().set(x, y, z);
+        return this.crucible$renderTemp.get().set(x, y, z);
+    }
+
+    @Redirect(method = "updateRenderChunks", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/BlockPos;offset(III)Lnet/minecraft/core/BlockPos;", ordinal = 1))
+    public BlockPos offset(BlockPos instance, int x, int y, int z) {
+        return this.crucible$renderTemp.get().setWithOffset(instance, x, y, z);
     }
 }

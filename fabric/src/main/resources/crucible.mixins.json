@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "fabric.WeightedBakedModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
