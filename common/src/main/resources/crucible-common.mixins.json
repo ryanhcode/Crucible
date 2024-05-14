@@ -39,6 +39,7 @@
     "client.pose.ChunkRenderDispatcherCompileMixin",
     "client.pose.GameRendererMixin",
     "client.pose.ItemPickupParticleMixin",
+    "client.pose.ItemTransformMixin",
     "client.pose.LoomScreenMixin",
     "client.pose.MinecraftMixin",
     "client.pose.MobAppearanceParticleMixin",
